@@ -1,0 +1,20 @@
+.ul-custom li a{
+	color:green !important;
+	text-align: center;
+}
+
+.ul-custom li:hover{
+	background-color: #c0c0c0;
+}
+
+.footer-custom{
+	position:absolute;
+	
+	left:120px;
+}
+.search-custom{
+	width:200px;
+}
+small {
+	color:red;
+}
