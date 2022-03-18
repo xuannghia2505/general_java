@@ -14,24 +14,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import general.MVC.bean.KhachHang;
-
-
-public class KhachHangDao {
+import general.MVC.bean.DichVu;
+public class DichVuDao {
 	Connection conn =null;
 	PreparedStatement ps = null;
 	ResultSet rs= null;
 	
-	public ArrayList<KhachHang> getAllKhachHang() throws SQLException {
-		ArrayList<KhachHang> listKH= new ArrayList<KhachHang>();
+	public ArrayList<DichVu> getAllDichVu() throws SQLException {
+		ArrayList<DichVu> listDV= new ArrayList<DichVu>();
 	try {
 		conn =  new DBConnect().getConnection();
 
-		String query = "select * from KHACHHANG";
+		String query = "select * from DICHVU";
 		PreparedStatement ps = conn.prepareStatement(query);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
-			listKH.add(new KhachHang(rs.getNString(1),rs.getNString(2),rs.getNString(3),rs.getNString(4),rs.getNString(5)));
+			listDV.add(new DichVu(rs.getNString(1),rs.getNString(2),rs.getNString(3),rs.getLong(4)));
 		}
 		
 	} catch (Exception e) {
@@ -49,20 +47,19 @@ public class KhachHangDao {
 		}	
     	
 	}
-	return listKH;
+	return listDV;
 	}
-	public int  insertKhachHang(String makh, String tenkh, String diachi,String sdt,String email) throws SQLException {
+	public int  insertDichVu(String madv, String tendv, String donvitinh,long dongia) throws SQLException {
 		int flag= -1;
-		String query = "insert into KHACHHANG(MaKH,TenKH,DiaChi,SoDienThoai,DiaChiEmail)\r\n" + 
-				"values(?,?,?,?,?)";
+		String query = "insert into DICHVU(MaDV,TenDV,DonViTinh,DonGia)\r\n" + 
+				"values(?,?,?,?)";
 		try {
 			conn = new DBConnect().getConnection();
 			ps = conn.prepareStatement(query);
-			ps.setNString(1, makh);
-			ps.setNString(2, tenkh);
-			ps.setNString(3, diachi);
-			ps.setNString(4, sdt);
-			ps.setNString(5, email);
+			ps.setNString(1, madv);
+			ps.setNString(2, tendv);
+			ps.setNString(3, donvitinh);
+			ps.setLong(4,dongia);
 			
 			flag= ps.executeUpdate();	
 		} catch (Exception e) {
