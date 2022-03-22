@@ -7,10 +7,10 @@
 	background-color: #c0c0c0;
 }
 
-.footer-custom{
-	position:absolute;
+.footer-custom div.container{
 	
-	left:120px;
+	display:flex;
+	justify-content:center;
 }
 .search-custom{
 	width:200px;

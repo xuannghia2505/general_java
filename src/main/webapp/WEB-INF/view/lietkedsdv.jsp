@@ -3,10 +3,10 @@
     pageEncoding="UTF-8"%>
 <%@include file="header.jsp"%>
 <div class="container">
-<form action="">
+<form action="lietkedsdv">
 	<div class="input-group mb-3">
 		<input type="text" class="search-custom"
-			placeholder="Nhập thông tin dịch vụ" >
+			placeholder="Nhập thông tin dịch vụ" name="key" value="${key}">
 		<div class="input-group-append">
 			<button class="btn btn-outline-secondary" type="submit">Tìm
 				kiếm</button>
@@ -25,26 +25,28 @@
 
 	</thead>
 	<tbody>
+	<c:forEach items="${listDV}" var="dv">
 		<tr>
-			<td>DV001</td>
-			<td>Mì tôm thịt boà</td>
-			<td>Tô</td>
-			<td>10000</td>
+			<td>${dv.maDV }</td>
+			<td>${dv.tenDV }</td>
+			<td>${dv.donvitinh }</td>
+			<td>${dv.dongia }</td>
+			
 			<td><span> <i class="fa fa-edit"></i> <i
 					class="fa fa-trash"></i>
 			</span></td>
 		</tr>
-
+	 </c:forEach>
 	</tbody>
 </table>
-<div class="mx-auto" style="width: 250px;">
-	<ul class="pagination" style="width: 100%;">
-		<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-		<li class="page-item"><a class="page-link" href="#">1</a></li>
-		<li class="page-item"><a class="page-link" href="#">2</a></li>
-		<li class="page-item"><a class="page-link" href="#">3</a></li>
-		<li class="page-item"><a class="page-link" href="#">Next</a></li>
-	</ul>
-</div>
+ <div class="mx-auto" style="width: 250px;">
+            <ul class="pagination" style="width: 100%;">
+              <li class="page-item"><a class="page-link" href="lietkedsdv?message=pre&key=${key}">Previous</a></li>
+              <c:forEach var="i" begin="1" end="${soPage }">
+              <li class="page-item"><a class="page-link" href="lietkedsdv?page=${i}&key=${key}"><c:out value="${i}"></c:out></a></li>
+              </c:forEach>
+              <li class="page-item"><a class="page-link" href="lietkedsdv?message=next&key=${key}">Next</a></li>
+            </ul>
+          </div>
 </div>
 <%@include file="footer.jsp"%>

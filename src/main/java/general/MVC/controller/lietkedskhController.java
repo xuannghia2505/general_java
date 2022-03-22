@@ -8,6 +8,8 @@
  */
 package general.MVC.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import general.MVC.bean.KhachHang;
+import general.MVC.dao.KhachHangDao;
+
+
 @Controller
 public class lietkedskhController {
 	@RequestMapping(value= {"/lietkedskh"}, method=RequestMethod.GET,produces = "text/plain;charset=UTF-8")
@@ -25,7 +31,39 @@ public class lietkedskhController {
 	 	try {
 	 		response.setContentType("text/html;charset=UTF-8");
 	 		request.setCharacterEncoding("UTF-8");
-	 		request.setAttribute("title", "Liệt kê danh sách khách hàng");
+	 		KhachHangDao khDao = new KhachHangDao();
+	 		int soPage = khDao.getSoPageKH();
+	 		int page=1;
+	 		String key="";
+	 		
+	 		//pagination
+	 		if(request.getParameter("key")!=null) {
+	 			key=request.getParameter("key");
+	 			soPage = khDao.getSoPageKHOfKey(key);
+	 			model.addAttribute("key", key);
+	 		}
+
+	 		
+	 		if(request.getParameter("message")!=null) {
+	 			String message = (String) request.getParameter("message");
+	 			if(message.equals("pre")) {
+	 				if(page!=1) {
+	 					page--;
+	 				}
+	 			}else {
+	 				if(page!=soPage) {
+	 					page++;
+	 				}
+	 			}
+	 		} 		
+	 		else if(request.getParameter("page")!=null) {
+	 			 page = Integer.parseInt(request.getParameter("page"));
+	 			
+	 		}
+	 		
+	 		ArrayList<KhachHang> listKH = khDao.getKHbyPage(page,key);
+	 		model.addAttribute("soPage", soPage);
+	 		model.addAttribute("listKH", listKH);
 	    	return new ModelAndView("lietkedskh");
 		} catch (Exception e) {
 			e.getStackTrace();

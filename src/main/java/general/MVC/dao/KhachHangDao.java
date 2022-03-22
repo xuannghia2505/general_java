@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import general.MVC.bean.KhachHang;
 
 
+
 public class KhachHangDao {
 	Connection conn =null;
 	PreparedStatement ps = null;
@@ -29,6 +30,128 @@ public class KhachHangDao {
 
 		String query = "select * from KHACHHANG";
 		PreparedStatement ps = conn.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			listKH.add(new KhachHang(rs.getNString(1),rs.getNString(2),rs.getNString(3),rs.getNString(4),rs.getNString(5)));
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	finally {
+		if(rs!=null) {
+			rs.close();
+		}
+		if(ps!=null) {
+			ps.close();
+		}
+		if(conn!=null) {
+			conn.close();
+		}	
+    	
+	}
+	return listKH;
+	}
+	public KhachHang getKHById(String makh) throws SQLException {
+		KhachHang kh= null;
+	try {
+		conn =  new DBConnect().getConnection();
+
+		String query = "select * from KHACHHANG where MaKH=?";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setString(1, makh);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			kh=new KhachHang(rs.getNString(1), rs.getNString(2), rs.getNString(3), rs.getNString(4), rs.getNString(5));
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	finally {
+		if(rs!=null) {
+			rs.close();
+		}
+		if(ps!=null) {
+			ps.close();
+		}
+		if(conn!=null) {
+			conn.close();
+		}	
+    	
+	}
+	return kh;
+	}
+	public int getSoPageKH() throws SQLException {
+		int soPage=0;
+	try {
+		conn =  new DBConnect().getConnection();
+
+		String query = "select count(1) from KHACHHANG";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			soPage=rs.getInt(1);
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	finally {
+		if(rs!=null) {
+			rs.close();
+		}
+		if(ps!=null) {
+			ps.close();
+		}
+		if(conn!=null) {
+			conn.close();
+		}	
+    	
+	}
+	return soPage/4+1;
+	}
+	public int getSoPageKHOfKey(String key) throws SQLException {
+		int soPage=0;
+	try {
+		conn =  new DBConnect().getConnection();
+
+		String query = "select count(1) from KHACHHANG where MaKH like ? ";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setString(1, "%"+key+"%");
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			soPage=rs.getInt(1);
+		}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	finally {
+		if(rs!=null) {
+			rs.close();
+		}
+		if(ps!=null) {
+			ps.close();
+		}
+		if(conn!=null) {
+			conn.close();
+		}	
+    	
+	}
+	return soPage/4+1;
+	}
+	public ArrayList<KhachHang> getKHbyPage(int page,String key) throws SQLException {
+		int startItem= (page-1)*4;
+		ArrayList<KhachHang> listKH= new ArrayList<KhachHang>();
+	try {
+		conn =  new DBConnect().getConnection();
+
+		String query = "SELECT * FROM KHACHHANG  WHERE MaKH like ?  ORDER BY MaKH OFFSET ? ROWS FETCH NEXT 4 ROWS ONLY";
+		PreparedStatement ps = conn.prepareStatement(query);
+		ps.setString(1, "%"+key+"%");
+		ps.setInt(2, startItem);
+		
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
 			listKH.add(new KhachHang(rs.getNString(1),rs.getNString(2),rs.getNString(3),rs.getNString(4),rs.getNString(5)));

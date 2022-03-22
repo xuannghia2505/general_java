@@ -8,6 +8,8 @@
  */
 package general.MVC.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import general.MVC.bean.May;
+import general.MVC.dao.MayDao;
+
 @Controller
 public class lietkedsmayController {
 	@RequestMapping(value= {"/lietkedsmay"}, method=RequestMethod.GET,produces = "text/plain;charset=UTF-8")
@@ -25,7 +30,41 @@ public class lietkedsmayController {
 	 	try {
 	 		response.setContentType("text/html;charset=UTF-8");
 	 		request.setCharacterEncoding("UTF-8");
-	 		request.setAttribute("title", "Liệt kê danh sách máy");
+	 		model.addAttribute("title", "Liệt kê danh sách máy");
+	 		
+	 		MayDao mayDao = new MayDao();
+	 		int soPage = mayDao.getSoPageMay();
+	 		int page=1;
+	 		String key="";
+	 		
+	 		//pagination
+	 		if(request.getParameter("key")!=null) {
+	 			key=request.getParameter("key");
+	 			soPage = mayDao.getSoPageMayOfKey(key);
+	 			model.addAttribute("key", key);
+	 		}
+
+	 		
+	 		if(request.getParameter("message")!=null) {
+	 			String message = (String) request.getParameter("message");
+	 			if(message.equals("pre")) {
+	 				if(page!=1) {
+	 					page--;
+	 				}
+	 			}else {
+	 				if(page!=soPage) {
+	 					page++;
+	 				}
+	 			}
+	 		} 		
+	 		else if(request.getParameter("page")!=null) {
+	 			 page = Integer.parseInt(request.getParameter("page"));
+	 			
+	 		}
+	 		
+	 		ArrayList<May> listMay = mayDao.getMaybyPage(page,key);
+	 		model.addAttribute("soPage", soPage);
+	 		model.addAttribute("listMay", listMay);
 	    	return new ModelAndView("lietkedsmay");
 		} catch (Exception e) {
 			e.getStackTrace();
